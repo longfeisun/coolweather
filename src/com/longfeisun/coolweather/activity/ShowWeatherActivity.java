@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.longfeisun.coolweather.R;
 import com.longfeisun.coolweather.util.CallBackListener;
@@ -29,6 +30,7 @@ public class ShowWeatherActivity extends BaseActivity implements View.OnClickLis
 	private TextView tv_temp2;
 	private ImageButton ib_refresh;
 	private ImageButton ib_home;
+	private boolean finishFlag = false;
 
 	public static void actionStart(Context context, String countyCode) {
 		Intent intent = new Intent(context, ShowWeatherActivity.class);
@@ -140,5 +142,14 @@ public class ShowWeatherActivity extends BaseActivity implements View.OnClickLis
 		default:
 			break;
 		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if(finishFlag){
+			ActivityCollector.finishAll();
+		}
+		Toast.makeText(ShowWeatherActivity.this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+		finishFlag = true;
 	}
 }
