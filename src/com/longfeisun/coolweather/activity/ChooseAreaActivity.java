@@ -1,10 +1,15 @@
 package com.longfeisun.coolweather.activity;
 
+import java.net.ContentHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.R.color;
+import android.R.string;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -46,34 +51,53 @@ public class ChooseAreaActivity extends BaseActivity {
 	private List<City> listCites;
 	private List<County> listCounties;
 
+	public static void actionStart(Context context){
+		Intent intent = new Intent(context, ChooseAreaActivity.class);
+		intent.putExtra("flag", "reset");
+		context.startActivity(intent);
+	}
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.choose_area);
-		db = CoolWeatherDB.getInstance(this);
-		tv_title = (TextView) this.findViewById(R.id.tv_title);
-		lv_area = (ListView) this.findViewById(R.id.lv_area);
-		adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, listData);
-		lv_area.setAdapter(adapter);
-		lv_area.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				if (LEVEL_CURRENT == LEVEL_PROVINCE) {
-					selectedProvince = listProvinces.get(position);
-					loadCity();
-				} else if (LEVEL_CURRENT == LEVEL_CITY) {
-					selectedCity = listCites.get(position);
-					loadCounty();
-				} else if (LEVEL_CURRENT == LEVEL_COUNTY) {
-					selectedCounty = listCounties.get(position);
+		String flag = getIntent().getStringExtra("flag");
+		
+		SharedPreferences pref = PreferenceManager
+				.getDefaultSharedPreferences(ChooseAreaActivity.this);
+		String weatherCode = pref.getString("weatherCode", null);
+		
+		if (TextUtils.isEmpty(weatherCode) || "reset".equals(flag)) {
+			db = CoolWeatherDB.getInstance(this);
+			tv_title = (TextView) this.findViewById(R.id.tv_title);
+			lv_area = (ListView) this.findViewById(R.id.lv_area);
+			adapter = new ArrayAdapter<String>(this,
+					android.R.layout.simple_list_item_1, listData);
+			lv_area.setAdapter(adapter);
+			lv_area.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					if (LEVEL_CURRENT == LEVEL_PROVINCE) {
+						selectedProvince = listProvinces.get(position);
+						loadCity();
+					} else if (LEVEL_CURRENT == LEVEL_CITY) {
+						selectedCity = listCites.get(position);
+						loadCounty();
+					} else if (LEVEL_CURRENT == LEVEL_COUNTY) {
+						selectedCounty = listCounties.get(position);
+						ShowWeatherActivity.actionStart(
+								ChooseAreaActivity.this,
+								selectedCounty.getCountyCode());
+						finish();
+					}
 				}
-			}
-		});
-
-		loadProvince();
-
+			});
+			loadProvince();
+		} else {
+			ShowWeatherActivity.actionStart(ChooseAreaActivity.this, null);
+		}
 	}
 
 	public void loadProvince() {
@@ -128,7 +152,7 @@ public class ChooseAreaActivity extends BaseActivity {
 		}
 	}
 
-	//重写返回键方法
+	// 重写返回键方法
 	@Override
 	public void onBackPressed() {
 		switch (LEVEL_CURRENT) {
@@ -143,8 +167,7 @@ public class ChooseAreaActivity extends BaseActivity {
 			break;
 		}
 	}
-	
-	
+
 	public void queryFromRequest(final String flag, final String code) {
 
 		String path = "http://www.weather.com.cn/data/list3/city"
@@ -182,7 +205,6 @@ public class ChooseAreaActivity extends BaseActivity {
 						}
 					});
 				}
-
 			}
 
 			@Override

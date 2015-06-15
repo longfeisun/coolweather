@@ -7,7 +7,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpUtil {
+	
+	private static final String TAG = "HttpUtil";
 	public static void sendHttpRequest(final String path, final CallBackListener listener){
+		
+		LogUtil.i(TAG, "--path->>" + path);
+		
+		
+		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
