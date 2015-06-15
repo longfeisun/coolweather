@@ -86,7 +86,7 @@ public class ChooseAreaActivity extends BaseActivity {
 			}
 			adapter.notifyDataSetChanged();
 			lv_area.setSelection(0);
-			tv_title.setText("È«¹ú");
+			tv_title.setText("å…¨å›½");
 			LEVEL_CURRENT = LEVEL_PROVINCE;
 
 		} else {
@@ -128,7 +128,7 @@ public class ChooseAreaActivity extends BaseActivity {
 		}
 	}
 
-	//ÖØĞ´·µ»Ø¼ü·½·¨
+	//é‡å†™è¿”å›é”®æ–¹æ³•
 	@Override
 	public void onBackPressed() {
 		switch (LEVEL_CURRENT) {
@@ -167,7 +167,7 @@ public class ChooseAreaActivity extends BaseActivity {
 				}
 
 				if (result) {
-					// »Øµ½Ö÷Ïß³Ì¸üĞÂ½çÃæ
+					// åœ¨UIçº¿ç¨‹æ›´æ–°ç•Œé¢
 					runOnUiThread(new Runnable() {
 						public void run() {
 

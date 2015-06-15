@@ -33,7 +33,7 @@ public class CoolWeatherDB {
 	}
 
 	/**
-	 * ±£´æÊ¡ĞÅÏ¢Êı¾İ¿â
+	 * ä¿å­˜çœä¿¡æ¯åˆ°æ•°æ®åº“
 	 * 
 	 * @param province
 	 */
@@ -47,7 +47,7 @@ public class CoolWeatherDB {
 	}
 
 	/**
-	 * ±£´æÊĞĞÅÏ¢µ½Êı¾İ¿â
+	 * ä¿å­˜åŸå¸‚ä¿¡æ¯åˆ°æ•°æ®åº“
 	 * 
 	 * @param city
 	 */
@@ -62,7 +62,7 @@ public class CoolWeatherDB {
 	}
 
 	/**
-	 * ±£´æÇøĞÅÏ¢µ½Êı¾İ¿â
+	 * ä¿å­˜åŒºä¿¡æ¯åˆ°æ•°æ®åº“
 	 * 
 	 * @param county
 	 */
@@ -77,7 +77,7 @@ public class CoolWeatherDB {
 	}
 
 	/**
-	 * È¡È«²¿Ê¡ĞÅÏ¢ÁĞ±í
+	 * å–çœä»½åˆ—è¡¨
 	 * 
 	 * @return
 	 */
@@ -101,7 +101,7 @@ public class CoolWeatherDB {
 	}
 
 	/**
-	 * °´Ê¡codeÈ¡ÊĞÁĞ±í
+	 * æŒ‰çœä»½ç¼–å·å–åŸå¸‚åˆ—è¡¨
 	 * 
 	 * @param provinceCode
 	 * @return
@@ -129,7 +129,7 @@ public class CoolWeatherDB {
 	}
 
 	/**
-	 * °´³ÇÊĞCodeÈ¡ÇøÁĞ±í
+	 * æŒ‰åŸå¸‚ç¼–ç å–åŒºåˆ—è¡¨
 	 * @param cityCode
 	 * @return
 	 */

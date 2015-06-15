@@ -19,8 +19,6 @@ public class HttpUtil {
 					conn.setConnectTimeout(8000);
 					conn.setReadTimeout(8000);
 					conn.connect();
-					
-					//200--³É¹¦
 					if(conn.getResponseCode() == 200){
 						InputStream in = conn.getInputStream();
 						BufferedReader reader = new BufferedReader(new InputStreamReader(in));
