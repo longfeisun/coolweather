@@ -7,14 +7,18 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="21" />
-
+<instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="com.longfeisun.coolweather" >
+    </instrumentation>
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <uses-library android:name="android.test.runner" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.longfeisun.coolweather.activity.ChooseAreaActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
     </application>
 
 </manifest>
