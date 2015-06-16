@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:textSize="25sp"
-        android:background="#98FB98"
+        android:background="#484E61"
         />
     <ListView 
         android:id="@+id/lv_area"

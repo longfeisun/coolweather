@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -18,7 +20,8 @@ import com.longfeisun.coolweather.util.HttpUtil;
 import com.longfeisun.coolweather.util.LogUtil;
 import com.longfeisun.coolweather.util.Utility;
 
-public class ShowWeatherActivity extends BaseActivity implements View.OnClickListener {
+public class ShowWeatherActivity extends BaseActivity implements
+		View.OnClickListener {
 	private static final String TAG = "ShowWeatherActivity";
 
 	private ProgressDialog dialog;
@@ -55,8 +58,19 @@ public class ShowWeatherActivity extends BaseActivity implements View.OnClickLis
 		String countyCode = getIntent().getStringExtra("countyCode");
 		dialog = new ProgressDialog(ShowWeatherActivity.this);
 		dialog.setMessage("正在获取天气信息...");
-		if(TextUtils.isEmpty(countyCode)){
-			showWeather();
+
+		if (TextUtils.isEmpty(countyCode)) {
+			
+			
+			if(isHasNet()){
+				 SharedPreferences pref = PreferenceManager
+				 .getDefaultSharedPreferences(ShowWeatherActivity.this);
+				 String weatherCode = pref.getString("weatherCode", "");
+				 queryWeatherInfo(weatherCode);
+			} else {
+				showWeather();
+			}
+			
 		} else {
 			dialog.show();
 			queryWeatherCode(countyCode);
@@ -119,7 +133,7 @@ public class ShowWeatherActivity extends BaseActivity implements View.OnClickLis
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(ShowWeatherActivity.this);
 		tv_title.setText(pref.getString("cityName", "空"));
-		tv_pushtime.setText("今天" + pref.getString("ptime", "空")  + "发布");
+		tv_pushtime.setText("今天" + pref.getString("ptime", "空") + "发布");
 		tv_date.setText(pref.getString("currenttime", "空"));
 		tv_weather.setText(pref.getString("weather", "空"));
 		tv_temp1.setText(pref.getString("temp1", "空"));
@@ -132,8 +146,8 @@ public class ShowWeatherActivity extends BaseActivity implements View.OnClickLis
 				.getDefaultSharedPreferences(ShowWeatherActivity.this);
 		switch (v.getId()) {
 		case R.id.ib_refresh:
-				dialog.show();
-				queryFromRequest(pref.getString("weatherCode", ""), "weather");
+			dialog.show();
+			queryFromRequest(pref.getString("weatherCode", ""), "weather");
 			break;
 		case R.id.ib_home:
 			ChooseAreaActivity.actionStart(ShowWeatherActivity.this);
@@ -143,13 +157,36 @@ public class ShowWeatherActivity extends BaseActivity implements View.OnClickLis
 			break;
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
-		if(finishFlag){
+		if (finishFlag) {
 			ActivityCollector.finishAll();
 		}
-		Toast.makeText(ShowWeatherActivity.this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+		Toast.makeText(ShowWeatherActivity.this, "再按一次退出应用", Toast.LENGTH_SHORT)
+				.show();
 		finishFlag = true;
 	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		if(isHasNet()){
+			SharedPreferences pref = PreferenceManager
+					.getDefaultSharedPreferences(ShowWeatherActivity.this);
+			String weatherCode = pref.getString("weatherCode", "");
+			queryWeatherInfo(weatherCode);
+		}
+	}
+
+	private boolean isHasNet() {
+		boolean flag = false;
+		ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+		NetworkInfo mNetworkInfo = manager.getActiveNetworkInfo();
+		if(mNetworkInfo != null){
+			flag = true;
+		}
+		return flag;
+	}
+
 }

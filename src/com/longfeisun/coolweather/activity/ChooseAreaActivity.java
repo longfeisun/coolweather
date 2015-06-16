@@ -1,10 +1,8 @@
 package com.longfeisun.coolweather.activity;
 
-import java.net.ContentHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.R.string;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.longfeisun.coolweather.R;
 import com.longfeisun.coolweather.db.CoolWeatherDB;
@@ -37,6 +36,8 @@ public class ChooseAreaActivity extends BaseActivity {
 	private static final int LEVEL_COUNTY = 2;
 	private int LEVEL_CURRENT = 3;
 
+	private boolean finishFlag = false;
+
 	private TextView tv_title;
 	private ListView lv_area;
 	private List<String> listData = new ArrayList<String>();
@@ -51,23 +52,22 @@ public class ChooseAreaActivity extends BaseActivity {
 	private List<City> listCites;
 	private List<County> listCounties;
 
-	public static void actionStart(Context context){
+	public static void actionStart(Context context) {
 		Intent intent = new Intent(context, ChooseAreaActivity.class);
 		intent.putExtra("flag", "reset");
 		context.startActivity(intent);
 	}
-	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.choose_area);
 		String flag = getIntent().getStringExtra("flag");
-		
+
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(ChooseAreaActivity.this);
 		String weatherCode = pref.getString("weatherCode", null);
-		
+
 		if (TextUtils.isEmpty(weatherCode) || "reset".equals(flag)) {
 			db = CoolWeatherDB.getInstance(this);
 			tv_title = (TextView) this.findViewById(R.id.tv_title);
@@ -155,16 +155,20 @@ public class ChooseAreaActivity extends BaseActivity {
 	// 重写返回键方法
 	@Override
 	public void onBackPressed() {
-		switch (LEVEL_CURRENT) {
-		case LEVEL_COUNTY:
+
+		if (LEVEL_CURRENT == LEVEL_PROVINCE) {
+			if (finishFlag == true) {
+				ActivityCollector.finishAll();
+			}
+			Toast.makeText(ChooseAreaActivity.this, "再按一次退出应用",
+					Toast.LENGTH_SHORT).show();
+			finishFlag = true;
+		} else if (LEVEL_CURRENT == LEVEL_COUNTY) {
 			loadCity();
-			break;
-		case LEVEL_CITY:
+			finishFlag = false;
+		} else if (LEVEL_CURRENT == LEVEL_COUNTY) {
 			loadProvince();
-			break;
-		default:
-			finish();
-			break;
+			finishFlag = false;
 		}
 	}
 
@@ -210,10 +214,8 @@ public class ChooseAreaActivity extends BaseActivity {
 			@Override
 			public void onError(Exception e) {
 				LogUtil.i(TAG, e.getMessage());
-
 			}
 		});
 
 	}
-
 }
