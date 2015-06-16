@@ -1,5 +1,7 @@
 package com.longfeisun.coolweather.activity;
 
+import net.youmi.android.banner.AdSize;
+import net.youmi.android.banner.AdView;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +27,6 @@ public class ShowWeatherActivity extends BaseActivity implements
 		View.OnClickListener {
 	private static final String TAG = "ShowWeatherActivity";
 
-	private ProgressDialog dialog;
 	private TextView tv_title;
 	private TextView tv_pushtime;
 	private TextView tv_date;
@@ -33,6 +35,7 @@ public class ShowWeatherActivity extends BaseActivity implements
 	private TextView tv_temp2;
 	private ImageButton ib_refresh;
 	private ImageButton ib_home;
+	private LinearLayout layout_content;
 	private boolean finishFlag = false;
 
 	public static void actionStart(Context context, String countyCode) {
@@ -53,11 +56,23 @@ public class ShowWeatherActivity extends BaseActivity implements
 		tv_temp2 = (TextView) this.findViewById(R.id.tv_temp2);
 		ib_refresh = (ImageButton) this.findViewById(R.id.ib_refresh);
 		ib_home = (ImageButton) this.findViewById(R.id.ib_home);
+		layout_content = (LinearLayout) this.findViewById(R.id.layout_content);
+		
+		layout_content.setVisibility(View.INVISIBLE);
+		tv_pushtime.setText("天气加载中...");
+		
+		//实例化广告条
+		AdView adView = new AdView(this, AdSize.FIT_SCREEN);
+		//获取要嵌入广告条的布局
+		LinearLayout adLayout=(LinearLayout)findViewById(R.id.adLayout);
+		//将广告条加入到布局中
+		adLayout.addView(adView);
+		
+		
+		
 		ib_refresh.setOnClickListener(this);
 		ib_home.setOnClickListener(this);
 		String countyCode = getIntent().getStringExtra("countyCode");
-		dialog = new ProgressDialog(ShowWeatherActivity.this);
-		dialog.setMessage("正在获取天气信息...");
 
 		if (TextUtils.isEmpty(countyCode)) {
 			
@@ -72,7 +87,6 @@ public class ShowWeatherActivity extends BaseActivity implements
 			}
 			
 		} else {
-			dialog.show();
 			queryWeatherCode(countyCode);
 		}
 	}
@@ -108,7 +122,6 @@ public class ShowWeatherActivity extends BaseActivity implements
 							@Override
 							public void run() {
 								showWeather();
-								dialog.dismiss();
 							}
 						});
 					}
@@ -138,6 +151,7 @@ public class ShowWeatherActivity extends BaseActivity implements
 		tv_weather.setText(pref.getString("weather", "空"));
 		tv_temp1.setText(pref.getString("temp1", "空"));
 		tv_temp2.setText(pref.getString("temp2", "空"));
+		layout_content.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -146,7 +160,8 @@ public class ShowWeatherActivity extends BaseActivity implements
 				.getDefaultSharedPreferences(ShowWeatherActivity.this);
 		switch (v.getId()) {
 		case R.id.ib_refresh:
-			dialog.show();
+			layout_content.setVisibility(View.INVISIBLE);
+			tv_pushtime.setText("天气加载中...");
 			queryFromRequest(pref.getString("weatherCode", ""), "weather");
 			break;
 		case R.id.ib_home:

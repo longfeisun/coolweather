@@ -3,6 +3,7 @@ package com.longfeisun.coolweather.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.youmi.android.AdManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -62,6 +63,10 @@ public class ChooseAreaActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.choose_area);
+
+		AdManager.getInstance(this).init("589953a15c6fac22",
+				"3501ff39776f386c", false);
+
 		String flag = getIntent().getStringExtra("flag");
 
 		SharedPreferences pref = PreferenceManager

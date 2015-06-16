@@ -9,17 +9,16 @@
         android:layout_height="50dp"
         android:background="#484E61" >
 
-        <ImageButton 
+        <ImageButton
             android:id="@+id/ib_home"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:scaleType="centerCrop"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/home"
-            />
-        
+            android:scaleType="centerCrop"
+            android:src="@drawable/home" />
+
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
@@ -41,7 +40,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="#00EEEE" >
 
         <TextView
@@ -55,6 +55,8 @@
             android:textSize="20sp" />
 
         <LinearLayout
+            android:id="@+id/layout_content"
+            android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -106,6 +108,14 @@
                     android:textColor="#FFFFFF"
                     android:textSize="30sp" />
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/adLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal" >
         </LinearLayout>
     </RelativeLayout>
 
